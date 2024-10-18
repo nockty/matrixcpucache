@@ -27,6 +27,13 @@ Benchmark_sumParallel-16        	   20118	     59674 ns/op	    1416 B/op	      3
 Example on a Linux AMD EPYC 4344P with DDR5 3600MHz:
 
 ```
+ Performance counter stats for './matrixcpucache.test -test.run=XXX -test.bench=Benchmark_sumLinked -test.benchmem':
+
+        1462167548      cache-references
+           8237463      cache-misses                     #    0.563 % of all cache refs
+        6670806625      cycles
+        8012768076      instructions                     #    1.20  insn per cycle
+
  Performance counter stats for './matrixcpucache.test -test.run=XXX -test.bench=Benchmark_sumCacheMiss -test.benchmem':
 
          717608656      cache-references
@@ -54,5 +61,4 @@ Example on a Linux AMD EPYC 4344P with DDR5 3600MHz:
           88023502      cache-misses                     #    2.796 % of all cache refs
        25877437876      cycles
       133755133003      instructions                     #    5.17  insn per cycle
-
 ```
