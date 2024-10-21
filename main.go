@@ -51,7 +51,7 @@ func (m *Matrix) sumCacheHit() int64 {
 	return sum
 }
 
-func (m *Matrix) sumFalseSharing() int64 {
+func (m *Matrix) sumContention() int64 {
 	numThreads := runtime.NumCPU()
 	counts := make([]int64, numThreads)
 	var wg sync.WaitGroup
@@ -72,6 +72,36 @@ func (m *Matrix) sumFalseSharing() int64 {
 		sum += counts[i]
 	}
 	return sum
+}
+
+func (m *Matrix) sumFalseSharing() int64 {
+	numThreads := runtime.NumCPU()
+	counts := make([]int64, numThreads)
+	var wg sync.WaitGroup
+	wg.Add(numThreads)
+	for k := 0; k < numThreads; k++ {
+		startRow := k * m.numRows / numThreads
+		endRow := (k + 1) * m.numRows / numThreads
+		count := &counts[k]
+		go func(k int) {
+			sumChunk(m.matrix, startRow, endRow, m.numCols, count)
+			wg.Done()
+		}(k)
+	}
+	wg.Wait()
+	var sum int64
+	for i := 0; i < numThreads; i++ {
+		sum += counts[i]
+	}
+	return sum
+}
+
+func sumChunk(matrix [][]int64, startRow, endRow, numCols int, count *int64) {
+	for i := startRow; i < endRow; i++ {
+		for j := 0; j < numCols; j++ {
+			*count += matrix[i][j]
+		}
+	}
 }
 
 func (m *Matrix) sumParallel() int64 {

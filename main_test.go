@@ -68,6 +68,10 @@ func Test_sum(t *testing.T) {
 		if actual != tc.expected {
 			t.Errorf("got %d, want %d", actual, tc.expected)
 		}
+		actual = matrix.sumContention()
+		if actual != tc.expected {
+			t.Errorf("got %d, want %d", actual, tc.expected)
+		}
 		actual = matrix.sumFalseSharing()
 		if actual != tc.expected {
 			t.Errorf("got %d, want %d", actual, tc.expected)
@@ -166,6 +170,16 @@ func Benchmark_sumCacheHit(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		r = matrix.sumCacheHit()
+	}
+	result = r
+}
+
+func Benchmark_sumContention(b *testing.B) {
+	matrix := setupMatrix()
+	var r int64
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		r = matrix.sumContention()
 	}
 	result = r
 }
